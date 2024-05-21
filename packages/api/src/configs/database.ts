@@ -3,16 +3,16 @@ import type { ConnectOptions } from "mongoose";
 import mongoose from "mongoose";
 import configs from "./configs";
 
-const options: ConnectOptions = {};
+const options: ConnectOptions = {
+  retryWrites: true,
+};
 
 export const connectMongoDB = async () => {
   try {
     if (configs.env === "test") return;
+    console.log(configs.database);
 
-    const connection = await mongoose.connect(
-      "mongodb://localhost:27017/device-management-system",
-      options,
-    );
+    const connection = await mongoose.connect(configs.database.url, options);
     console.log(
       chalk.green(`MongoDB connected: ${connection.connection.host}`),
     );
