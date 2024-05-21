@@ -1,5 +1,20 @@
 import { Schema, model } from "mongoose";
 
+const operatingSystemSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  version: {
+    type: String,
+    required: true,
+  },
+  architecture: {
+    type: String,
+    required: true,
+  },
+});
+
 const deviceSchema = new Schema(
   {
     systemId: {
@@ -13,7 +28,7 @@ const deviceSchema = new Schema(
       required: true,
     },
     operatingSystem: {
-      type: String,
+      type: operatingSystemSchema,
       required: true,
     },
     pictureUrl: {
