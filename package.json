@@ -1,18 +1,18 @@
 {
   "name": "device-management-system",
-  "module": "index.ts",
-  "type": "module",
   "version": "0.0.1",
-  "scripts": {
-    "dev": "bun --cwd packages/api dev"
-  },
+  "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "peerDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "scripts": {
+    "dev": "bun --cwd packages/api dev"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ]
 }
