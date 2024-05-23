@@ -80,6 +80,6 @@ export const createDevice = async (
       return res.status(409).json({ error, data: null });
     }
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ error: "Internal server error", data: null });
   }
 };

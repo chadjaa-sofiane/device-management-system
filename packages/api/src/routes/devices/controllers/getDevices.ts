@@ -46,8 +46,9 @@ export const getDevices = async (
       data,
       totalCount,
       totalPages,
+      error: null,
     });
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ error: "Internal server error", data: null });
   }
 };
