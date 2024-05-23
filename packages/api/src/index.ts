@@ -2,6 +2,7 @@ import configs from "@/configs/configs";
 import { connectMongoDB, desConnectMongoDB } from "@/configs/database";
 import chalk from "chalk";
 import cors from "cors";
+import deviceRouter from "./routes/devices";
 import express from "express";
 
 const app = express();
@@ -11,9 +12,7 @@ app.use(cors());
 
 await connectMongoDB();
 
-app.get("/", (_, res) => {
-  return res.json({ message: "Hello, World!" });
-});
+app.use("/devices", deviceRouter);
 
 app.listen(configs.port, () => {
   console.log(
