@@ -1,47 +1,7 @@
 import Device from "@/models/devices";
 import { z } from "zod";
+import { ARCHITECTURES, OPERATING_SYSTEM_NAME } from "@/lib/constants";
 import type { Request, Response } from "express";
-
-const ARCHITECTURES = ["x86_64", "arm64", "arm", "ppc64le", "s390x"] as const;
-const OPERATING_SYSTEM_NAME = [
-  "windows",
-  "linux",
-  "darwin",
-  "freebsd",
-  "openbsd",
-  "netbsd",
-  "illumos",
-  "sunos",
-  "aix",
-  "hp-ux",
-  "cygwin",
-  "macos",
-  "ios",
-  "android",
-  "nacl",
-  "plan9",
-  "haiku",
-  "qnx",
-  "solaris",
-  "z/os",
-  "vms",
-  "os/2",
-  "amigaos",
-  "riscos",
-  "beos",
-  "vxworks",
-  "tizen",
-  "blackberryos",
-  "symbian",
-  "palmos",
-  "webos",
-  "kaios",
-  "contiki",
-  "inferno",
-  "zephyr",
-  // easter egg
-  "TempleOS",
-] as const;
 
 export const createDeviceSchema = z.object({
   body: z.object({
