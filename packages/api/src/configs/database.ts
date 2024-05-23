@@ -10,11 +10,11 @@ const options: ConnectOptions = {
 export const connectMongoDB = async () => {
   try {
     if (configs.env === "test") return;
-    console.log(configs.database);
-
     const connection = await mongoose.connect(configs.database.url, options);
     console.log(
-      chalk.green(`MongoDB connected: ${connection.connection.host}`),
+      chalk.green(
+        `MongoDB connected successfully: ${connection.connection.host}`,
+      ),
     );
   } catch (error: any) {
     console.error(error.message);

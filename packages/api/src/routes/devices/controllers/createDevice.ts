@@ -1,6 +1,6 @@
 import Device from "@/models/devices";
 import { z } from "zod";
-import type { RequestHandler, Request } from "express";
+import type { Request, Response } from "express";
 
 const ARCHITECTURES = ["x86_64", "arm64", "arm", "ppc64le", "s390x"] as const;
 const OPERATING_SYSTEM_NAME = [
@@ -62,9 +62,9 @@ export const createDeviceSchema = z.object({
 
 type Body = z.infer<typeof createDeviceSchema>["body"];
 
-export const createDevice: RequestHandler = async (
-  req: Request<unknown, unknown, Body>,
-  res,
+export const createDevice = async (
+  req: Request<unknown, unknown, Body, { something: string }>,
+  res: Response,
 ) => {
   try {
     const { systemId, name, operatingSystem } = req.body;
