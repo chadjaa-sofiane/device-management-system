@@ -9,7 +9,7 @@ import type { AnyZodObject } from "zod";
  */
 
 const validate =
-  (schema: AnyZodObject): RequestHandler =>
+  (schema: AnyZodObject): RequestHandler<unknown, unknown, unknown, unknown> =>
   async (req, res, next) => {
     try {
       await schema.parseAsync({
