@@ -30,6 +30,6 @@ export const deleteDevice = async (req: Request<Params>, res: Response) => {
       .status(200)
       .json({ message: "Device deleted successfully", data: null });
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ error: "Internal server error", data: null });
   }
 };
