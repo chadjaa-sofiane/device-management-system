@@ -1,9 +1,11 @@
+import { OPERATING_SYSTEM_NAME, ARCHITECTURES } from "@/lib/constants";
 import { Schema, model } from "mongoose";
 
 const operatingSystemSchema = new Schema({
   name: {
     type: String,
     required: true,
+    enum: OPERATING_SYSTEM_NAME,
   },
   version: {
     type: String,
@@ -12,6 +14,7 @@ const operatingSystemSchema = new Schema({
   architecture: {
     type: String,
     required: true,
+    enum: ARCHITECTURES,
   },
 });
 
