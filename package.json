@@ -9,7 +9,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun --cwd packages/api dev"
+    "dev": "bun --cwd packages/api dev & bun --cwd packages/client dev"
   },
   "type": "module",
   "workspaces": [
