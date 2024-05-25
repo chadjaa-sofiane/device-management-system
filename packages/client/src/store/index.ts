@@ -1,8 +1,11 @@
 import { configureStore, combineSlices } from "@reduxjs/toolkit";
+import devices from "./devicesSlice";
 
 export const createStore = () =>
   configureStore({
-    reducer: combineSlices({}),
+    reducer: combineSlices({
+      devices,
+    }),
   });
 
 const store = createStore();
