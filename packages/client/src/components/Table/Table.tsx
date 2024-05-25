@@ -1,17 +1,20 @@
-import { useMemo } from "react";
+import { isValidElement } from "react";
 
-export type Columns = {
+export type Column<T extends Record<string, unknown>> = {
   key: string;
   label: React.ReactNode;
-}[];
+  render?: ({ row }: { row: T }) => React.ReactNode;
+};
 
-interface TableProps {
-  columns: Columns;
-  data: Record<string, string | React.ReactNode>[];
+interface TableProps<T extends Record<string, unknown>> {
+  columns: Column<T>[];
+  data: T[];
 }
 
-const Table = ({ columns, data }: TableProps) => {
-  const Row = useMemo(() => createRow(columns), [columns]);
+const Table = <T extends Record<string, unknown>>({
+  columns,
+  data,
+}: TableProps<T>) => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -29,7 +32,7 @@ const Table = ({ columns, data }: TableProps) => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((item, index) => (
-            <Row key={index} rowData={item} />
+            <Row columns={columns} key={index} rowData={item} />
           ))}
         </tbody>
       </table>
@@ -37,25 +40,60 @@ const Table = ({ columns, data }: TableProps) => {
   );
 };
 
-interface RowProps {
-  rowData: Record<string, string | React.ReactNode>;
+const isRenderable = (element: unknown): element is React.ReactNode => {
+  if (
+    typeof element === "string" ||
+    typeof element === "number" ||
+    typeof element === "boolean" ||
+    typeof element === "undefined" ||
+    element === null ||
+    isValidElement(element)
+  ) {
+    return true;
+  }
+  if (Array.isArray(element)) {
+    return element.every(isRenderable);
+  }
+
+  return false;
+};
+
+interface RowProps<T extends Record<string, unknown>> {
+  rowData: T;
+  columns: Column<T>[];
 }
 
-const createRow =
-  (columns: Columns) =>
-  ({ rowData }: RowProps) => {
-    return (
-      <tr>
-        {columns.map((item, index) => (
-          <td
-            key={index}
-            className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-          >
-            {rowData[item.key]}
-          </td>
-        ))}
-      </tr>
-    );
-  };
+const Row = <T extends Record<string, unknown>>({
+  rowData,
+  columns,
+}: RowProps<T>) => {
+  return (
+    <tr>
+      {columns.map((item, index) => (
+        <RowCell key={index} data={rowData} item={item} />
+      ))}
+    </tr>
+  );
+};
+
+const RowCell = <T extends Record<string, unknown>>({
+  data,
+  item,
+}: {
+  data: T;
+  item: Column<T>;
+}) => {
+  const cellValue = data[item.key];
+
+  return (
+    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+      {item.render
+        ? item.render({ row: data })
+        : isRenderable(cellValue)
+          ? cellValue
+          : "N/A"}
+    </td>
+  );
+};
 
 export default Table;
