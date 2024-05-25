@@ -1,4 +1,4 @@
-import { fetchDevices } from "@/services/devices";
+import { Device, fetchDevices } from "@/services/devices";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type Status = "idle" | "loading" | "succeeded" | "failed";
@@ -6,7 +6,7 @@ type Status = "idle" | "loading" | "succeeded" | "failed";
 type InitialState = {
   status: Status;
   errors: unknown;
-  devices: [];
+  devices: Device[];
 };
 
 const initialState: InitialState = {

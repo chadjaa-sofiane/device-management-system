@@ -1,5 +1,18 @@
 const BASE_URL = "http://localhost:3000";
 
+export type Device = {
+  systemId: string;
+  name: string;
+  operatingSystem: {
+    name: string;
+    version: string;
+    architecture: string;
+  };
+  pictureUrl: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export const fetchDevices = async () => {
   const response = await fetch(`${BASE_URL}/devices`);
 
@@ -11,5 +24,5 @@ export const fetchDevices = async () => {
     };
   }
   const { data } = await response.json();
-  return data;
+  return data as Device[];
 };
