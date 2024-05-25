@@ -1,11 +1,12 @@
 import Devices from "@/pages/Devices";
-import { Provider as ReduxProvider } from "react-redux";
+import { fetchDevicesAsync } from "@/store/devicesSlice";
+import { useEffect } from "react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import store from "./store";
+import { useAppDispatch } from "./hooks/reduxHooks";
 
 const router = createBrowserRouter([
   {
@@ -31,11 +32,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <ReduxProvider store={store}>
-      <RouterProvider router={router} />;
-    </ReduxProvider>
-  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDevicesAsync());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
