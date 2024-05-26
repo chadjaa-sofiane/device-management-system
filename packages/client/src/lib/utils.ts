@@ -80,8 +80,6 @@ export const isMongooseError = (error: unknown): error is MongooseError => {
   return (
     typeof error === "object" &&
     error !== null &&
-    "name" in error &&
-    "message" in error &&
     "code" in error &&
     "keyPattern" in error &&
     "keyValue" in error &&
@@ -95,9 +93,7 @@ export const isMongooseError = (error: unknown): error is MongooseError => {
  *
  */
 
-export const mapServerErrorsToForm = <
-  T extends Record<string, string | undefined | null>,
->(
+export const mapServerErrorsToForm = <T>(
   setError: UseFormSetError<Required<T>>,
   errors: T,
 ): void => {
@@ -106,7 +102,7 @@ export const mapServerErrorsToForm = <
     if (!value) return;
     setError(key as unknown as Path<Required<T>>, {
       type: "manual",
-      message: value,
+      message: value as string,
     });
   }
 };
