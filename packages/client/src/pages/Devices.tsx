@@ -1,15 +1,18 @@
 import { Pagination } from "@/components/Pagination";
 import { Column, Table } from "@/components/Table";
-import { useAppSelector } from "@/hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { cn } from "@/lib/utils";
 import { Device } from "@/services/devices";
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import { setPage } from "@/store/devicesSlice";
 
 const Devices = () => {
-  const { devices, totalCount } = useAppSelector((state) => state.devices);
-  const [page, setPage] = useState(1);
+  const { devices, totalCount, page } = useAppSelector(
+    (state) => state.devices,
+  );
+  const dispatch = useAppDispatch();
 
   return (
     <div className="container m-auto flex flex-col min-h-screen mt-4">
@@ -18,8 +21,8 @@ const Devices = () => {
         <div className="flex justify-center">
           <Pagination
             currentPage={page}
-            onPageChange={setPage}
-            totalPages={Math.ceil(totalCount / 10)}
+            onPageChange={(page) => dispatch(setPage(page))}
+            totalPages={Math.ceil(totalCount / 5)}
           />
         </div>
       </div>
@@ -88,7 +91,6 @@ const columns: Column<Device>[] = [
       </>
     ),
     render: ({ row }) => {
-      console.log("row", row);
       return (
         <div className="flex items-center">
           <button
