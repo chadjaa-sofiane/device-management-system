@@ -7,20 +7,22 @@ type InitialState = {
   status: Status;
   errors: unknown;
   devices: Device[];
+  totalCount: number;
 };
 
 const initialState: InitialState = {
   status: "idle",
   errors: null,
   devices: [],
+  totalCount: 0,
 };
 
 export const fetchDevicesAsync = createAsyncThunk(
   "devices/fetchDevices",
   async (_, { rejectWithValue }) => {
     try {
-      const devices = await fetchDevices();
-      return devices;
+      const result = await fetchDevices();
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -34,7 +36,8 @@ const devicesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchDevicesAsync.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.devices = action.payload;
+      state.devices = action.payload.data;
+      state.totalCount = action.payload.totalCount;
     });
     builder.addCase(fetchDevicesAsync.rejected, (state, action) => {
       state.status = "failed";

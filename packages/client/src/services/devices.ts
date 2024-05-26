@@ -1,6 +1,7 @@
 const BASE_URL = "http://localhost:3000";
 
 export type Device = {
+  _id: string;
   systemId: string;
   name: string;
   operatingSystem: {
@@ -23,6 +24,9 @@ export const fetchDevices = async () => {
       error: await response.json(),
     };
   }
-  const { data } = await response.json();
-  return data as Device[];
+  const { data, totalCount } = await response.json();
+  return {
+    data,
+    totalCount,
+  } as { data: Device[]; totalCount: number };
 };
