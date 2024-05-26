@@ -3,14 +3,30 @@ import type { Path, UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { type ZodIssue } from "zod";
 
+/**
+ * Combines class names using Tailwind CSS's twMerge and clsx utility functions.
+ * This function is designed to simplify the process of combining class names in React components.
+ *
+ */
+
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
+
+/**
+ * Generates an array of sequential numbers starting from `start` and ending at `end` with a step of `step`.
+ *
+ */
 
 export const createSequentialArray = (start: number, end: number, step = 1) => {
   const length = Math.floor((end - start) / step) + 1;
   return Array.from({ length }, (_, i) => start + step * i);
 };
+
+/**
+ * Extracts errors from an array of Zod validation issues and returns them as a key-value pair.
+ *
+ */
 
 export const extractErrorsFromIssues = (issues: ZodIssue[] = []) => {
   return issues.reduce(
@@ -31,6 +47,13 @@ type MongooseError = {
   index: number;
 };
 
+/**
+ * Extracts meaningful error messages from Mongoose error objects.
+ * This function is specifically designed to handle errors commonly encountered when interacting with MongoDB using Mongoose.
+ * note: currently it is only handeling errors with error code of 11000 (unique element).
+ *
+ */
+
 export const extractMongooseErrors = (error: MongooseError | null) => {
   if (!error) return {};
   if (error?.code === 11000) {
@@ -41,6 +64,12 @@ export const extractMongooseErrors = (error: MongooseError | null) => {
   }
   return {};
 };
+
+/**
+ * Maps server-side validation errors to form errors for React Hook Form.
+ * This function is designed to be used in conjunction with useForm from react-hook-form.
+ *
+ */
 
 export const mapServerErrorsToForm = <
   T extends Record<string, string | undefined | null>,
