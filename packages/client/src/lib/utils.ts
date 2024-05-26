@@ -1,7 +1,7 @@
 import clsx, { ClassValue } from "clsx";
 import type { Path, UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-import { type ZodIssue } from "zod";
+import { ZodError, type ZodIssue } from "zod";
 
 /**
  * Combines class names using Tailwind CSS's twMerge and clsx utility functions.
@@ -24,6 +24,14 @@ export const createSequentialArray = (start: number, end: number, step = 1) => {
 };
 
 /**
+ * Checks if an error is a Zod validation error.
+ *
+ */
+export const isZodError = (error: unknown): error is ZodError => {
+  return error instanceof ZodError;
+};
+
+/**
  * Extracts errors from an array of Zod validation issues and returns them as a key-value pair.
  *
  */
@@ -38,7 +46,7 @@ export const extractErrorsFromIssues = (issues: ZodIssue[] = []) => {
   );
 };
 
-type MongooseError = {
+export type MongooseError = {
   name: string;
   message: string;
   code: number;
@@ -63,6 +71,22 @@ export const extractMongooseErrors = (error: MongooseError | null) => {
     };
   }
   return {};
+};
+
+/**
+ * Type guard to check if an error is a MongooseError.
+ */
+export const isMongooseError = (error: unknown): error is MongooseError => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "name" in error &&
+    "message" in error &&
+    "code" in error &&
+    "keyPattern" in error &&
+    "keyValue" in error &&
+    "index" in error
+  );
 };
 
 /**
