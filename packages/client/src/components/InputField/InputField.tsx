@@ -52,8 +52,8 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           className={cn(
             "dark:text-[#62636a] text-opacity-50 text-sm first-letter:uppercase",
             {
-              "text-error": !!error,
-              "text-done": done,
+              "text-red-500": !!error,
+              "text-blue-500": done,
             },
           )}
           htmlFor={id}
@@ -65,8 +65,8 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           className={cn(
             "w-full bg-transparent outline-none border border-text border-opacity-25 py-3.5 px-[1.125em] rounded-lg font-medium flex items-center",
             {
-              "border-error": error,
-              "border-done": done,
+              "border-red-500": error,
+              "border-blue-500": done,
             },
           )}
         >
@@ -91,8 +91,8 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             aria-atomic="true"
             data-testid={`error-message-${name}`}
             className={cn("text-xs px-[1.125em]", {
-              "text-error": error,
-              "text-done": done,
+              "text-red-500": error,
+              "text-blue-500": done,
             })}
           >
             {" "}
