@@ -22,6 +22,26 @@ export const extractErrorsFromIssues = (issues: ZodIssue[] = []) => {
   );
 };
 
+type MongooseError = {
+  name: string;
+  message: string;
+  code: number;
+  keyPattern: Record<string, number>;
+  keyValue: Record<string, string>;
+  index: number;
+};
+
+export const extractMongooseErrors = (error: MongooseError | null) => {
+  if (!error) return {};
+  if (error?.code === 11000) {
+    const keys = Object.keys(error.keyPattern);
+    return {
+      [keys[0]]: `${keys[0]} already exists !`,
+    };
+  }
+  return {};
+};
+
 export const mapServerErrorsToForm = <
   T extends Record<string, string | undefined | null>,
 >(
