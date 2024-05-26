@@ -35,7 +35,7 @@ export const createDevice = async (
     });
     try {
       const savedDevice = await device.save();
-      return res.status(200).json(savedDevice);
+      return res.status(200).json({ error: null, data: savedDevice });
     } catch (error) {
       return res.status(409).json({ error, data: null });
     }
