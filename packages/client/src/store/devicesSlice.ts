@@ -18,6 +18,7 @@ type Status = "idle" | "loading" | "succeeded" | "failed";
 type InitialState = {
   status: Status;
   errors: unknown;
+  page: number;
   devices: Device[];
   totalCount: number;
   createDevice: {
@@ -29,6 +30,7 @@ type InitialState = {
 const initialState: InitialState = {
   status: "idle",
   errors: null,
+  page: 1,
   devices: [],
   totalCount: 0,
   createDevice: {
@@ -39,9 +41,10 @@ const initialState: InitialState = {
 
 export const fetchDevicesAsync = createAsyncThunk(
   "devices/fetchDevices",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      const result = await fetchDevices();
+      const { devices } = getState() as { devices: InitialState };
+      const result = await fetchDevices({ page: devices.page, limit: 5 });
       return result;
     } catch (error) {
       return rejectWithValue(error);
@@ -68,6 +71,10 @@ const devicesSlice = createSlice({
     resetCreateDevice: (state) => {
       state.createDevice.status = "idle";
       state.createDevice.errors = null;
+    },
+    setPage: (state, action: PayloadAction<number>) => {
+      if (action.payload > 0 && action.payload <= state.totalCount)
+        state.page = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -108,5 +115,5 @@ const devicesSlice = createSlice({
     });
   },
 });
-export const { resetCreateDevice } = devicesSlice.actions;
+export const { resetCreateDevice, setPage } = devicesSlice.actions;
 export default devicesSlice.reducer;
