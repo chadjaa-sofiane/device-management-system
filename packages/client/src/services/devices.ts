@@ -24,8 +24,12 @@ export type CustomError = {
   error: ZodError | MongooseError;
 };
 
-export const fetchDevices = async () => {
-  const response = await fetch(`${BASE_URL}/devices`);
+export const fetchDevices = async (queries = { page: 1, limit: 5 }) => {
+  const { page = 1, limit = 10 } = queries;
+
+  const response = await fetch(
+    `${BASE_URL}/devices?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`,
+  );
   const data = await response.json();
 
   if (!response.ok) {
