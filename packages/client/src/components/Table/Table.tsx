@@ -68,7 +68,7 @@ const Row = <T extends Record<string, unknown>>({
   columns,
 }: RowProps<T>) => {
   return (
-    <tr>
+    <tr className="hover:bg-gray-100 transition-colors duration-300">
       {columns.map((item, index) => (
         <RowCell key={index} data={rowData} item={item} />
       ))}
