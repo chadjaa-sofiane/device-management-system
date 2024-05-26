@@ -1,6 +1,7 @@
 import clsx, { ClassValue } from "clsx";
 import type { Path, UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
+import { type ZodIssue } from "zod";
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
@@ -9,6 +10,16 @@ export const cn = (...inputs: ClassValue[]) => {
 export const createSequentialArray = (start: number, end: number, step = 1) => {
   const length = Math.floor((end - start) / step) + 1;
   return Array.from({ length }, (_, i) => start + step * i);
+};
+
+export const extractErrorsFromIssues = (issues: ZodIssue[] = []) => {
+  return issues.reduce(
+    (acc, issue) => {
+      acc[issue.path[1]] = issue.message;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 };
 
 export const mapServerErrorsToForm = <
