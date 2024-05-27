@@ -2,6 +2,7 @@ import Device from "@/models/devices";
 import { z } from "zod";
 import { ARCHITECTURES, OPERATING_SYSTEM_NAME } from "@/lib/constants";
 import type { Request, Response } from "express";
+import { deleteFile } from "@/lib/utils";
 
 export const createDeviceSchema = z.object({
   body: z.object({
@@ -28,15 +29,19 @@ export const createDevice = async (
 ) => {
   try {
     const { systemId, name, operatingSystem } = req.body;
+
     const device = new Device({
       systemId,
       name,
       operatingSystem,
+      pictureUrl: req.file?.path || null,
     });
+
     try {
       const savedDevice = await device.save();
       return res.status(200).json({ error: null, data: savedDevice });
     } catch (error) {
+      if (req.file) deleteFile(req.file?.path);
       return res.status(409).json({ error, data: null });
     }
   } catch (error) {
