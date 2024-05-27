@@ -157,6 +157,10 @@ const devicesSlice = createSlice({
       state.createDevice.status = "failed";
     });
 
+    builder.addCase(createDeviceAsync.pending, (state) => {
+      state.createDevice.status = "loading";
+    });
+
     // delete device
     builder.addCase(deleteDeviceAsync.fulfilled, (state, action) => {
       state.devices = state.devices.filter(
