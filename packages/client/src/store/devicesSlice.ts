@@ -11,6 +11,8 @@ import {
   type CreateDeviceInputs,
   type CustomError,
   type Device,
+  type UpdateDeviceInputs,
+  updateDevice,
 } from "@/services/devices";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -26,6 +28,10 @@ type InitialState = {
     status: Status;
     errors: unknown;
   };
+  updateDevice: {
+    status: Status;
+    errors: unknown;
+  };
 };
 
 const initialState: InitialState = {
@@ -35,6 +41,10 @@ const initialState: InitialState = {
   devices: [],
   totalCount: 0,
   createDevice: {
+    status: "idle",
+    errors: null,
+  },
+  updateDevice: {
     status: "idle",
     errors: null,
   },
@@ -76,6 +86,24 @@ export const deleteDeviceAsync = createAsyncThunk(
   },
 );
 
+export const updateDeviceAsync = createAsyncThunk(
+  "devices/updateDevice",
+  async (
+    {
+      id,
+      updateDeviceInputs,
+    }: { id: string; updateDeviceInputs: UpdateDeviceInputs },
+    { rejectWithValue },
+  ) => {
+    try {
+      const result = await updateDevice(id, updateDeviceInputs);
+      return result;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 const devicesSlice = createSlice({
   name: "devices",
   initialState,
@@ -83,6 +111,10 @@ const devicesSlice = createSlice({
     resetCreateDevice: (state) => {
       state.createDevice.status = "idle";
       state.createDevice.errors = null;
+    },
+    resetUpdateDevice: (state) => {
+      state.updateDevice.status = "idle";
+      state.updateDevice.errors = null;
     },
     setPage: (state, action: PayloadAction<number>) => {
       if (action.payload > 0 && action.payload <= state.totalCount)
@@ -117,9 +149,8 @@ const devicesSlice = createSlice({
       if (isZodError(error)) {
         state.createDevice.errors = extractErrorsFromIssues(error.issues);
       }
-      console.log("test: ", isMongooseError(error));
+
       if (isMongooseError(error)) {
-        console.log("mongoose error", extractMongooseErrors(error));
         state.createDevice.errors = extractMongooseErrors(error);
       }
 
@@ -132,7 +163,37 @@ const devicesSlice = createSlice({
         (device) => device._id !== action.meta.arg,
       );
     });
+
+    // update device
+    builder.addCase(updateDeviceAsync.fulfilled, (state, action) => {
+      state.updateDevice.status = "succeeded";
+      state.devices = state.devices.map((device) => {
+        return device._id === action.payload.data._id
+          ? action.payload.data
+          : device;
+      });
+    });
+
+    builder.addCase(updateDeviceAsync.rejected, (state, action) => {
+      const { payload } = action as PayloadAction<CustomError>;
+      const { error } = payload;
+
+      if (isZodError(error)) {
+        state.createDevice.errors = extractErrorsFromIssues(error.issues);
+      }
+
+      if (isMongooseError(error)) {
+        state.createDevice.errors = extractMongooseErrors(error);
+      }
+
+      state.updateDevice.status = "failed";
+    });
+
+    builder.addCase(updateDeviceAsync.pending, (state) => {
+      state.updateDevice.status = "loading";
+    });
   },
 });
-export const { resetCreateDevice, setPage } = devicesSlice.actions;
+export const { resetCreateDevice, resetUpdateDevice, setPage } =
+  devicesSlice.actions;
 export default devicesSlice.reducer;
