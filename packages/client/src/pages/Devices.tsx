@@ -1,6 +1,7 @@
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { Pagination } from "@/components/Pagination";
 import { Column, Table } from "@/components/Table";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { cn } from "@/lib/utils";
 import { Device } from "@/services/devices";
@@ -24,6 +25,13 @@ const Devices = () => {
             onPageChange={(page) => dispatch(setPage(page))}
             totalPages={Math.ceil(totalCount / 5)}
           />
+        </div>
+        <div>
+          <Link to="/devices/create">
+            <button className="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-2 transition-colors duration-200">
+              Create a new device
+            </button>
+          </Link>
         </div>
       </div>
     </div>
