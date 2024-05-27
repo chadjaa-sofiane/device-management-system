@@ -1,12 +1,12 @@
+import { Dialog, DialogContent } from "@/components/Dialog";
 import { Pagination } from "@/components/Pagination";
 import { Column, Table } from "@/components/Table";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { cn } from "@/lib/utils";
 import { Device } from "@/services/devices";
+import { deleteDeviceAsync, setPage } from "@/store/devicesSlice";
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/Dialog";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import { setPage } from "@/store/devicesSlice";
 
 const Devices = () => {
   const { devices, totalCount, page } = useAppSelector(
@@ -111,10 +111,11 @@ interface DeleteDialogProps {
 }
 
 const DeleteDialog = ({ row }: DeleteDialogProps) => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const handleOk = () => {
-    // Add delete logic here
+    dispatch(deleteDeviceAsync(row._id));
     setOpen(false);
   };
 
