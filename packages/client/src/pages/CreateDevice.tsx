@@ -3,6 +3,8 @@ import { Select } from "@/components/Select";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { ARCHITECTURES, OPERATING_SYSTEM_NAME } from "@/lib/constants";
 import { cn, mapServerErrorsToForm } from "@/lib/utils";
+import { FaArrowLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import {
   createDeviceSchema,
   type CreateDeviceInputs,
@@ -55,6 +57,11 @@ const CreateDevice = () => {
   return (
     <div className="container m-auto flex justify-center items-center h-screen">
       <div className="w-full md:w-1/2 p-6 border border-gray-200 rounded-lg bg-gray-100/20">
+        <div>
+          <Link to="/devices">
+            <FaArrowLeft className="text-2xl" />
+          </Link>
+        </div>
         <h1 className="text-3xl font-bold text-center mb-6">Create Device</h1>
         <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
           <InputField

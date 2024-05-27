@@ -82,3 +82,23 @@ export const createDevice = async (inputs: CreateDeviceInputs) => {
   }
   return { data: data.data } as { data: Device };
 };
+
+export const deleteDevice = async (id: string) => {
+  const response = await fetch(`${BASE_URL}/devices/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw {
+      status: response.status,
+      statusText: response.statusText,
+      error: data.error,
+    } as CustomError;
+  }
+
+  return { message: data.message } as { message: string };
+};

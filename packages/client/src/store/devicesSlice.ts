@@ -7,6 +7,7 @@ import {
 import {
   createDevice,
   fetchDevices,
+  deleteDevice,
   type CreateDeviceInputs,
   type CustomError,
   type Device,
@@ -64,6 +65,17 @@ export const createDeviceAsync = createAsyncThunk(
   },
 );
 
+export const deleteDeviceAsync = createAsyncThunk(
+  "devices/deleteDevice",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await deleteDevice(id);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 const devicesSlice = createSlice({
   name: "devices",
   initialState,
@@ -112,6 +124,13 @@ const devicesSlice = createSlice({
       }
 
       state.createDevice.status = "failed";
+    });
+
+    // delete device
+    builder.addCase(deleteDeviceAsync.fulfilled, (state, action) => {
+      state.devices = state.devices.filter(
+        (device) => device._id !== action.meta.arg,
+      );
     });
   },
 });

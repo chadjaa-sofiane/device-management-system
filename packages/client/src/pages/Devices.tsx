@@ -1,12 +1,14 @@
+import { Dialog, DialogContent } from "@/components/Dialog";
 import { Pagination } from "@/components/Pagination";
 import { Column, Table } from "@/components/Table";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { cn } from "@/lib/utils";
 import { Device } from "@/services/devices";
+import { deleteDeviceAsync, setPage } from "@/store/devicesSlice";
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/Dialog";
+import { FaPlus } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import { setPage } from "@/store/devicesSlice";
+import { Link } from "react-router-dom";
 
 const Devices = () => {
   const { devices, totalCount, page } = useAppSelector(
@@ -18,12 +20,19 @@ const Devices = () => {
     <div className="container m-auto flex flex-col min-h-screen mt-4">
       <div className="border border-[#E2E8F0] rounded-lg mt-32 p-4">
         <Table columns={columns} data={devices} />
-        <div className="flex justify-center">
+        <div className="relative flex justify-center items-center">
           <Pagination
             currentPage={page}
             onPageChange={(page) => dispatch(setPage(page))}
             totalPages={Math.ceil(totalCount / 5)}
           />
+          <div className="absolute right-0">
+            <Link to="/devices/create">
+              <button className="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-2 transition-colors duration-200">
+                <FaPlus className="text-xl" />
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -111,10 +120,11 @@ interface DeleteDialogProps {
 }
 
 const DeleteDialog = ({ row }: DeleteDialogProps) => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const handleOk = () => {
-    // Add delete logic here
+    dispatch(deleteDeviceAsync(row._id));
     setOpen(false);
   };
 
