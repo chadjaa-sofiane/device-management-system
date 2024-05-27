@@ -48,6 +48,7 @@ export const fetchDevices = async (queries = { page: 1, limit: 5 }) => {
 export const createDeviceSchema = z.object({
   systemId: z.string().min(1),
   name: z.string().min(1),
+  picture: z.instanceof(FileList).optional(),
   operatingSystem: z.object({
     name: z.enum(OPERATING_SYSTEM_NAME),
     version: z
@@ -63,16 +64,29 @@ export const createDeviceSchema = z.object({
 export type CreateDeviceInputs = z.infer<typeof createDeviceSchema>;
 
 export const createDevice = async (inputs: CreateDeviceInputs) => {
+  const formData = new FormData();
+
+  formData.append("systemId", inputs.systemId);
+  formData.append("name", inputs.name);
+  if (inputs.picture) {
+    formData.append("picture", inputs.picture[0]);
+  }
+  formData.append("operatingSystem[name]", inputs.operatingSystem.name);
+  formData.append("operatingSystem[version]", inputs.operatingSystem.version);
+  formData.append(
+    "operatingSystem[architecture]",
+    inputs.operatingSystem.architecture,
+  );
+
+  console.log("this is the formData", formData);
   const response = await fetch(`${BASE_URL}/devices`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(inputs),
+    body: formData,
   });
 
   const data = await response.json();
 
+  console.log(data);
   if (!response.ok) {
     throw {
       status: response.status,
@@ -111,6 +125,7 @@ const stringPreProcess = (name: unknown) => {
 export const updateDeviceSchema = z.object({
   systemId: z.preprocess(stringPreProcess, z.string().min(1).optional()),
   name: z.preprocess(stringPreProcess, z.string().min(1).optional()),
+  picture: z.instanceof(File).optional(),
   operatingSystem: z
     .object({
       name: z.preprocess(
