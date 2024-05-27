@@ -1,5 +1,6 @@
 import CreateDevice from "@/pages/CreateDevice";
 import Devices from "@/pages/Devices";
+import UpdateDevice from "@/pages/UpdateDevice";
 import { fetchDevicesAsync } from "@/store/devicesSlice";
 import { useEffect } from "react";
 import {
@@ -23,8 +24,8 @@ const router = createBrowserRouter([
     element: <CreateDevice />,
   },
   {
-    path: "/devices/update",
-    element: <div>About</div>,
+    path: "/devices/update/:id",
+    element: <UpdateDevice />,
   },
   {
     path: "*",
