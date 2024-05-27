@@ -62,7 +62,7 @@ const CreateDevice = () => {
             <FaArrowLeft className="text-2xl" />
           </Link>
         </div>
-        <h1 className="text-3xl font-bold text-center mb-6">Create Device</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Create a Device</h1>
         <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
           <InputField
             {...register("systemId")}
@@ -159,7 +159,7 @@ const CreateDevice = () => {
   );
 };
 
-const UploadImage = () => {
+export const UploadImage = () => {
   return (
     <div className="relative">
       <input id="upload" type="file" className="sr-only" accept="image/*" />
