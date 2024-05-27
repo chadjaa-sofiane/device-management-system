@@ -94,20 +94,18 @@ const columns: Column<Device>[] = [
   },
   {
     key: "actions",
-    label: (
-      <>
-        <h1> actions </h1>
-      </>
-    ),
+    label: <h1> actions </h1>,
     render: ({ row }) => {
       return (
         <div className="flex items-center">
-          <button
-            className="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-2 transition-colors duration-200"
-            // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          >
-            <MdModeEdit className="w-4 h-4" />
-          </button>
+          <Link to={`/devices/update/${row._id}`}>
+            <button
+              className="flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg ml-2 transition-colors duration-200"
+              // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            >
+              <MdModeEdit className="w-4 h-4" />
+            </button>
+          </Link>
           <DeleteDialog row={row} />
         </div>
       );

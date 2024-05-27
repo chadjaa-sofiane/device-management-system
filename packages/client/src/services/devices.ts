@@ -102,3 +102,58 @@ export const deleteDevice = async (id: string) => {
 
   return { message: data.message } as { message: string };
 };
+
+const stringPreProcess = (name: unknown) => {
+  if (!name || typeof name !== "string") return undefined;
+  return name.trim() === "" ? undefined : name;
+};
+
+export const updateDeviceSchema = z.object({
+  systemId: z.preprocess(stringPreProcess, z.string().min(1).optional()),
+  name: z.preprocess(stringPreProcess, z.string().min(1).optional()),
+  operatingSystem: z
+    .object({
+      name: z.preprocess(
+        stringPreProcess,
+        z.enum(OPERATING_SYSTEM_NAME).optional(),
+      ),
+      version: z.preprocess(
+        stringPreProcess,
+        z
+          .string()
+          .regex(
+            /^\d+\.\d+\.\d+$/,
+            "Version must be a valid semantic version number (e.g., 10.0.0, 22.04)",
+          )
+          .optional(),
+      ),
+      architecture: z.preprocess(
+        stringPreProcess,
+        z.enum(ARCHITECTURES).optional(),
+      ),
+    })
+    .optional(),
+});
+
+export type UpdateDeviceInputs = z.infer<typeof updateDeviceSchema>;
+
+export const updateDevice = async (id: string, inputs: UpdateDeviceInputs) => {
+  const response = await fetch(`${BASE_URL}/devices/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(inputs),
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw {
+      status: response.status,
+      statusText: response.statusText,
+      error: data.error,
+    } as CustomError;
+  }
+
+  return { data: data.data } as { data: Device };
+};
