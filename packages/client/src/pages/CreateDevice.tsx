@@ -10,7 +10,12 @@ import {
 import { createDeviceAsync, resetCreateDevice } from "@/store/devicesSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm, type UseFormRegister } from "react-hook-form";
+import {
+  FieldValues,
+  Path,
+  useForm,
+  type UseFormRegister,
+} from "react-hook-form";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -158,11 +163,13 @@ const CreateDevice = () => {
   );
 };
 
-interface UploadImageProps {
-  register: UseFormRegister<CreateDeviceInputs>;
+interface UploadImageProps<T extends FieldValues> {
+  register: UseFormRegister<T>;
 }
 
-export const UploadImage = ({ register }: UploadImageProps) => {
+export const UploadImage = <T extends FieldValues>({
+  register,
+}: UploadImageProps<T>) => {
   const [preview, setPreview] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,7 +184,7 @@ export const UploadImage = ({ register }: UploadImageProps) => {
   return (
     <div className="relative">
       <input
-        {...register("picture")}
+        {...register("picture" as unknown as Path<T>)}
         id="upload"
         type="file"
         className="sr-only"
