@@ -3,12 +3,13 @@ import { Pagination } from "@/components/Pagination";
 import { Column, Table } from "@/components/Table";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { cn } from "@/lib/utils";
-import { Device } from "@/services/devices";
+import { BASE_URL, Device } from "@/services/devices";
 import { deleteDeviceAsync, setPage } from "@/store/devicesSlice";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
+import defaultDevice from "@/assets/default-device.png";
 
 const Devices = () => {
   const { devices, totalCount, page } = useAppSelector(
@@ -45,7 +46,11 @@ const columns: Column<Device>[] = [
     label: "picture",
     render: ({ row }) => (
       <img
-        src={row.pictureUrl || "https://picsum.photos/200/300"}
+        src={
+          row.pictureUrl
+            ? `${BASE_URL}/uploads/${row.pictureUrl}`
+            : defaultDevice
+        }
         alt={row.name || "picture"}
         className="w-24 h-24 object-cover"
       />
