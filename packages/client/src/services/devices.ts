@@ -2,7 +2,7 @@ import { ARCHITECTURES, OPERATING_SYSTEM_NAME } from "@/lib/constants";
 import { MongooseError } from "@/lib/utils";
 import { ZodError, z } from "zod";
 
-const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://localhost:3000";
 
 export type Device = {
   _id: string;
@@ -125,7 +125,7 @@ const stringPreProcess = (name: unknown) => {
 export const updateDeviceSchema = z.object({
   systemId: z.preprocess(stringPreProcess, z.string().min(1).optional()),
   name: z.preprocess(stringPreProcess, z.string().min(1).optional()),
-  picture: z.instanceof(File).optional(),
+  picture: z.instanceof(FileList).optional(),
   operatingSystem: z
     .object({
       name: z.preprocess(
