@@ -7,13 +7,13 @@ import {
   updateDeviceSchema,
   type UpdateDeviceInputs,
 } from "@/services/devices";
+import { resetUpdateDevice, updateDeviceAsync } from "@/store/devicesSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { UploadImage } from "./CreateDevice";
-import { resetUpdateDevice, updateDeviceAsync } from "@/store/devicesSlice";
+// import { UploadImage } from "./CreateDevice";
 
 const operatingSystemOptions = OPERATING_SYSTEM_NAME.map((operatingSystem) => ({
   label: operatingSystem,
@@ -123,7 +123,7 @@ const UpdateDevice = () => {
             }
           />
 
-          <UploadImage />
+          {/* <UploadImage register={register} /> */}
           <button
             type="submit"
             className={cn(

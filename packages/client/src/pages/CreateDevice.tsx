@@ -3,17 +3,21 @@ import { Select } from "@/components/Select";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { ARCHITECTURES, OPERATING_SYSTEM_NAME } from "@/lib/constants";
 import { cn, mapServerErrorsToForm } from "@/lib/utils";
-import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import {
   createDeviceSchema,
   type CreateDeviceInputs,
 } from "@/services/devices";
 import { createDeviceAsync, resetCreateDevice } from "@/store/devicesSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  FieldValues,
+  Path,
+  useForm,
+  type UseFormRegister,
+} from "react-hook-form";
+import { FaArrowLeft } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 const architecturesOptions = ARCHITECTURES.map((architecture) => ({
   label: architecture,
@@ -35,7 +39,7 @@ const CreateDevice = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors, touchedFields, isSubmitting },
+    formState: { errors, touchedFields },
   } = useForm<CreateDeviceInputs>({
     resolver: zodResolver(createDeviceSchema),
   });
@@ -140,18 +144,18 @@ const CreateDevice = () => {
             }
           />
 
-          <UploadImage />
+          <UploadImage register={register} />
           <button
             type="submit"
             className={cn(
               "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200",
               {
-                "cursor-not-allowed bg-opacity-50": isSubmitting,
+                "cursor-not-allowed bg-opacity-50": status === "loading",
               },
             )}
-            disabled={isSubmitting}
+            disabled={status === "loading"}
           >
-            {isSubmitting ? "Submitting..." : "Submit"}
+            {status === "loading" ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
@@ -159,16 +163,40 @@ const CreateDevice = () => {
   );
 };
 
-export const UploadImage = () => {
+interface UploadImageProps<T extends FieldValues> {
+  register: UseFormRegister<T>;
+}
+
+export const UploadImage = <T extends FieldValues>({
+  register,
+}: UploadImageProps<T>) => {
+  const [preview, setPreview] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      setPreview(reader.result as string);
+    };
+  };
+
   return (
     <div className="relative">
-      <input id="upload" type="file" className="sr-only" accept="image/*" />
+      <input
+        {...register("picture" as unknown as Path<T>)}
+        id="upload"
+        type="file"
+        className="sr-only"
+        accept="image/*"
+        onChange={handleChange}
+      />
       <div className="w-40 h-40 border border-dashed border-gray-300 rounded-lg flex justify-center items-center">
         <label
           htmlFor="upload"
           className="w-full h-full grid place-items-center ml-2 text-blue-500 cursor-pointer hover:underline"
         >
-          Upload Image
+          {preview ? <img src={preview} alt="device" /> : "Upload Image"}
         </label>
       </div>
     </div>
