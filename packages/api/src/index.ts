@@ -2,14 +2,15 @@ import configs from "@/configs/configs";
 import { connectMongoDB, desConnectMongoDB } from "@/configs/database";
 import chalk from "chalk";
 import cors from "cors";
-import deviceRouter from "./routes/devices";
 import express from "express";
+import path from "path";
+import deviceRouter from "./routes/devices";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads/")));
 await connectMongoDB();
 
 app.use("/devices", deviceRouter);
