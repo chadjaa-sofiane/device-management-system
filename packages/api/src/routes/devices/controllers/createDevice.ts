@@ -34,7 +34,7 @@ export const createDevice = async (
       systemId,
       name,
       operatingSystem,
-      pictureUrl: req.file?.path || null,
+      pictureUrl: req.file?.filename || null,
     });
 
     try {
